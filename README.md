@@ -29,16 +29,16 @@ on	demand	should	be	present	for	this	visualization	as	well.
 
 Additional	linking	between	1	and	2	should	be	present so	that	if	that	state	shown	in	1	is	
 also	present	in	2,	both	should	be	highlighted	when	moused	over.
-*Linking/Brushing needed once Vis #2 created
+* Linking/Brushing needed once Vis #2 created
 
 To Recap
 You	need	two	visualizations.
-*One	to	show	break-down	by	state	
-**allows the	state	to	be	selected	somehow	
-*needs	to	have	details	on	demand
-*One	to	show	top	3	of	each	category	
-*needs	to	filterable
-*needs	to	be	able	to	switch	between	percentages	and	straight	numbers	
-*needs	to	have	brushing	and	linking	within	itself	
-*needs	to	have	details	on	demand
-*Brushing/Linking	between	the	two	visualizations	is	required	
+* One	to	show	break-down	by	state	
+** allows the	state	to	be	selected	somehow	
+* needs	to	have	details	on	demand
+* One	to	show	top	3	of	each	category	
+* needs	to	filterable
+* needs	to	be	able	to	switch	between	percentages	and	straight	numbers	
+* needs	to	have	brushing	and	linking	within	itself	
+* needs	to	have	details	on	demand
+* Brushing/Linking	between	the	two	visualizations	is	required	
