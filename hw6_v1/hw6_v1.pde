@@ -1,24 +1,31 @@
 import controlP5.*;
 ControlP5 cp5;
 
+//dropDown variables
 DropdownList dropDown;
-Range filter;
-Button percentButton, numberButton;
-
-Table table;
-ArrayList<String> states;
-int rangeHigh, rangeLow = 0;
-
-//coordinate center of donut chart
-float circleX = 200;
-float circleY = 250;
-
 int currState = 0; //index of dropdown selected state for first viz
 
+//filter variables
+Range filter;
+int rangeHigh, rangeLow = 0;
+
+//Toggle variables
+Toggle dataToggle;
+int toggleValue = 0;//0=raw data, 1=percent data
+
+//data variables
+Table table;
+ArrayList<String> states;
 color[] colors = {#5484FF,#0fe85c,#ffe800,#e8804d,#cb0dff,#FF3042};
 String[] dataNames = {"Drove Alone", "Car-pooled", "Used Public Transportation", "Walked", "Other", "Worked at home"};
 
+
+//coordinate center of donut chart, vis1 variables
+float circleX = 200;
+float circleY = 250;
 ArrayList<Arc> arcShapes;
+
+//details on demand variables
 boolean detailOnDemand = false;
 int dodIndex = 0;
 
@@ -31,15 +38,18 @@ void setup(){
   
   createTable();
   createDropDown();
-  createButtons();
-  
-  //slider-filtering
-  filter = cp5.addRange("filter").setPosition(450, 350).setSize(400,20).setRange(0, 500);
-  filter.setColorBackground(color(0,0,0));
-  filter.setColorActive(color(200, 200, 0));
-  
+  createToggle();
+  createFilter();
+
   arcShapes = new ArrayList<Arc>();
   
+}
+
+void createFilter() {
+  //slider-filtering
+  filter = cp5.addRange("filter").setPosition(475, 400).setSize(400,20).setRange(0, 500);
+  filter.setColorBackground(color(0,0,0));
+  filter.setColorActive(color(200, 200, 0));
 }
 
 void createTable() {
@@ -76,9 +86,8 @@ void createDropDown() {
 
 }
 
-void createButtons() {
-  percentButton = cp5.addButton("percent button");
-  numberButton = cp5.addButton("number button");
+void createToggle() {
+  dataToggle = cp5.addToggle("data Toggle").setPosition(675, 435).setSize(50,20).setMode(ControlP5.SWITCH);
 }
 
 void controlEvent(ControlEvent theEvent) {
@@ -94,8 +103,16 @@ void controlEvent(ControlEvent theEvent) {
 void draw() {
   background(255);
   
+  //get values from filter
   rangeHigh = (int)filter.getLowValue();
   rangeLow = (int)filter.getHighValue();
+  //get toggle values, set labels
+  textSize(14);
+  fill(0);
+  text("percent data", 550, 450);
+  fill(0);
+  text("raw data", 750, 450);
+  toggleValue = (int)dataToggle.getValue();
   
   for(Arc a : arcShapes) {
     a.draw();
@@ -106,8 +123,8 @@ void draw() {
   createVis2();
   
   //poke the hole in the donut chart
+  fill(255, 255, 255);
   ellipse(circleX, circleY, 125, 125);
-  //fill(255, 255, 255);
   noStroke();
   
   loadPixels();
