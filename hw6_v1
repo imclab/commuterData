@@ -178,6 +178,7 @@ class Arc {
   }
 }
 
+//rectangle object for vis #2
 class Rectangle{
   int x,y,w,h,colorIndex,pop;
   //utilize pop paramater to create a proportional square (should be a normalized population value)
