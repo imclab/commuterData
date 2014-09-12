@@ -2,9 +2,11 @@ import controlP5.*;
 ControlP5 cp5;
 
 DropdownList dropDown;
+Range filter;
+Button percentButton, numberButton;
+
 Table table;
 ArrayList<String> states;
-Range filter;
 int rangeHigh, rangeLow = 0;
 
 //coordinate center of donut chart
@@ -29,7 +31,8 @@ void setup(){
   
   createTable();
   createDropDown();
-   
+  createButtons();
+  
   //slider-filtering
   filter = cp5.addRange("filter").setPosition(450, 350).setSize(400,20).setRange(0, 500);
   filter.setColorBackground(color(0,0,0));
@@ -73,6 +76,11 @@ void createDropDown() {
 
 }
 
+void createButtons() {
+  percentButton = cp5.addButton("percent button");
+  numberButton = cp5.addButton("number button");
+}
+
 void controlEvent(ControlEvent theEvent) {
   if (theEvent.isGroup()) {
     if (theEvent.group().name() == "states") {//name of dropdownlist
@@ -93,8 +101,6 @@ void draw() {
     a.draw();
   }
   
-  loadPixels();
-  
   //instantiate each visualization
   createVis1();
   createVis2();
@@ -104,6 +110,7 @@ void draw() {
   //fill(255, 255, 255);
   noStroke();
   
+  loadPixels();
   if(detailOnDemand == true) {
     String dodValue = table.getString(currState, dataNames[dodIndex]);
     fill(0,0,0);
