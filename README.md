@@ -33,12 +33,12 @@ also	present	in	2,	both	should	be	highlighted	when	moused	over.
 
 To Recap
 You	need	two	visualizations.
-• One	to	show	break-down	by	state	
-o allows the	state	to	be	selected	somehow	
-o needs	to	have	details	on	demand
-• One	to	show	top	3	of	each	category	
-o needs	to	filterable
-o needs	to	be	able	to	switch	between	percentages	and	straight	numbers	
-o needs	to	have	brushing	and	linking	within	itself	
-o needs	to	have	details	on	demand
-• Brushing/Linking	between	the	two	visualizations	is	required	
+*One	to	show	break-down	by	state	
+**allows the	state	to	be	selected	somehow	
+*needs	to	have	details	on	demand
+*One	to	show	top	3	of	each	category	
+*needs	to	filterable
+*needs	to	be	able	to	switch	between	percentages	and	straight	numbers	
+*needs	to	have	brushing	and	linking	within	itself	
+*needs	to	have	details	on	demand
+*Brushing/Linking	between	the	two	visualizations	is	required	
