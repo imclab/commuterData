@@ -20,10 +20,13 @@ color[] colors = {#5484FF,#0fe85c,#ffe800,#e8804d,#cb0dff,#FF3042};
 String[] dataNames = {"Drove Alone", "Car-pooled", "Used Public Transportation", "Walked", "Other", "Worked at home"};
 
 
-//coordinate center of donut chart, vis1 variables
+//coordinate center of donut chart
 float circleX = 200;
 float circleY = 250;
+
+//vis1, vis2 variables
 ArrayList<Arc> arcShapes;
+ArrayList<Rectangle> rectShapes;
 
 //details on demand variables
 boolean detailOnDemand = false;
@@ -42,12 +45,12 @@ void setup(){
   createFilter();
 
   arcShapes = new ArrayList<Arc>();
-  
+  rectShapes = new ArrayList<Rectangle>();
 }
 
 void createFilter() {
   //slider-filtering
-  filter = cp5.addRange("filter").setPosition(475, 400).setSize(400,20).setRange(0, 500);
+  filter = cp5.addRange("filter").setPosition(485, 430).setSize(400,20).setRange(0, 500);
   filter.setColorBackground(color(0,0,0));
   filter.setColorActive(color(200, 200, 0));
 }
@@ -87,7 +90,7 @@ void createDropDown() {
 }
 
 void createToggle() {
-  dataToggle = cp5.addToggle("data Toggle").setPosition(675, 435).setSize(50,20).setMode(ControlP5.SWITCH);
+  dataToggle = cp5.addToggle("data Toggle").setPosition(660, 470).setSize(50,20).setMode(ControlP5.SWITCH);
 }
 
 void controlEvent(ControlEvent theEvent) {
@@ -109,18 +112,39 @@ void draw() {
   //get toggle values, set labels
   textSize(14);
   fill(0);
-  text("percent data", 550, 450);
+  text("Raw Value", 570, 485);
   fill(0);
-  text("raw data", 750, 450);
+  text("Percentage", 730, 485);
   toggleValue = (int)dataToggle.getValue();
   
   for(Arc a : arcShapes) {
     a.draw();
   }
   
+  for(Rectangle r : rectShapes) {
+    r.draw();
+  }
+  
   //instantiate each visualization
   createVis1();
   createVis2();
+  
+  //draw labels for vis2
+  //coordinates of first letter of each row
+  int x = 445;
+  int y = 200;
+  int x2 = 465;
+  int y2 = 410;
+  for (int i = 0; i < 3; i++){
+    fill(0);
+    text(dataNames[i],x,y);
+    x += 180;
+  }
+  for (int i = 3; i < 6; i++){
+    text(dataNames[i],x2,y2);
+    fill(0);
+    x2 += 180;
+  }
   
   //poke the hole in the donut chart
   fill(255, 255, 255);
@@ -158,11 +182,46 @@ void donutChart(int diam, float[] angles) {
   }
 }
 
+//creation of vis2, called once in draw
 void createVis2() {
-  topThree();
+  //TODO: sorted data will return float[] we can call for each square, conditionals based on filters will be in findMaxes()
+  float[] f = new float[] {15503746,7001136,6058873};
+  //float[] f = new float[] {662513,331556,291801};
+  
+  //color arrays of each nested square
+  color[] cAlone = new color[] {#5484FF,#5DD5FF,#152140};
+  color[] cPool = new color[] {#0fe85c,#97FFB7,#18401D};
+  color[] cPublic = new color[] {#ffe800,#FFFAA5,#8F8200};
+  color[] cWalk = new color[] {#e8804d,#E8A695,#AB5E40};
+  color[] cOther = new color[] {#cb0dff,#EA9EFF,#590670};
+  color[] cHome = new color[] {#FF3042,#FFA5AF,#611219};
+  
+  //first row of squares
+  topThree(400,10,f,cAlone);
+  topThree(600,10,f,cPool);
+  topThree(800,10,f,cPublic);
+  //second row of squares
+  topThree(400,220,f,cWalk);
+  topThree(600,220,f,cOther);
+  topThree(800,220,f,cHome);
+
+
 }
 
-void topThree() {
+/*
+* Create three nested squares based on input of 3 floats
+* 
+*/
+void topThree(int x, int y, float[] maxes, color[] c) {
+  for (int i = 0; i<3; i++){
+    Rectangle r = new Rectangle(x,y,maxes[i],c[i]);
+    rectShapes.add(r);  
+  }
+}
+
+//when finding maxes place it in array based upon filtered constraints
+void findMaxes(float min, float max){
+  
 }
 
 void mouseMoved() {
@@ -204,19 +263,21 @@ class Arc {
 
 //rectangle object for vis #2
 class Rectangle{
-  int x,y,w,h,colorIndex,pop;
+  float pop;
+  int x,y,w,h;
+  color c;
   //utilize pop paramater to create a proportional square (should be a normalized population value)
-  Rectangle(int x, int y, int w, int h, int colorIndex, int pop) {
+  //hardcoded normalization based off largest value in csv
+  Rectangle(int x, int y, float pop, color c) {
     this.x = x;
     this.y = y;
-    this.w = w;
-    this.h = h;
-    this.colorIndex = colorIndex;
+    this.c = c;
     this.pop = pop;
   }
   
   void draw(){
-    rect(x,y,w,h,12,12,12,12);
+    fill(c);
+    rect(x,y,(pop/90000),(pop/90000),12,12,12,12);
   }
 }
 
