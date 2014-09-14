@@ -136,7 +136,6 @@ void draw() {
   //get values from filter
   rangeLow = (int)filter.getLowValue();
   rangeHigh = (int)filter.getHighValue();
-  println(rangeHigh);
   findMaxes();
  
     
@@ -192,17 +191,11 @@ void draw() {
       text(dataNames[dodIndex] + ": " + dodValue, mouseX, mouseY);
     }
     else {
-      String state = vis2States[dodIndex][dodIndex2] +  " ";
-      int index = 0;
-      for(int i=0; i<states.size(); i++){
-        if (states.get(i).equals(state) == true) {
-          index = i;
-        }
-      }
-      dodValue = table.getString(index, dataNames[dodIndex]);
+      String state = states.get((int)topStatesIndex[dodIndex*3 + dodIndex2]);
+     
       fill(0,0,0);
       textSize(16);
-      text(state + ": " + dodValue, mouseX, mouseY);
+      text(state + ": " + topStatesData[dodIndex*3 + dodIndex2], mouseX, mouseY);
     }
   }
 }
@@ -261,7 +254,7 @@ void topThree(int x, int y, float[] maxes, color[] c) {
 //when finding maxes place it in array based upon filtered constraints
 void findMaxes(){
   float max = 0; 
-  float maxIndex = 0;
+  float maxIndex = ;
   float oldMax1 = 0;
   float oldMax2 = 0;
   int index = 0;
