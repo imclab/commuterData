@@ -114,10 +114,18 @@ void createToggle() {
 
 void controlEvent(ControlEvent theEvent) {
   if (theEvent.isGroup()) {
+    println(theEvent.group().name());
     if (theEvent.group().name() == "states") {//name of dropdownlist
       currState = (int)theEvent.group().getValue();
       print(currState); 
     }
+//    if (theEvent.group().name() == "filter") {
+//      //get values from filter
+//      rangeLow = (int)filter.getLowValue();
+//      rangeHigh = (int)filter.getHighValue();
+//      println(rangeHigh);
+//      findMaxes();
+//    }
     else if(theEvent.isController()) {}
   }
 }
@@ -128,7 +136,9 @@ void draw() {
   //get values from filter
   rangeLow = (int)filter.getLowValue();
   rangeHigh = (int)filter.getHighValue();
+  println(rangeHigh);
   findMaxes();
+ 
     
   //get toggle values, set labels
   textSize(14);
@@ -305,6 +315,9 @@ void mouseMoved() {
   } 
 }
 
+
+
+//SHAPE CLASSES
 class Arc {
   float diam, lastAngle, newAngle;
   int color_index;
