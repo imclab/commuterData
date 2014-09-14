@@ -60,7 +60,7 @@ void setup(){
 
 void createFilter() {
   //slider-filtering
-  filter = cp5.addRange("filter").setPosition(485, 430).setSize(400,20).setRange(0, 15000000);
+  filter = cp5.addRange("filter").setPosition(485, 430).setSize(400,20).setRange(0, 15000000).setValue(15000000);
   filter.setColorBackground(color(0,0,0));
   filter.setColorActive(color(200, 200, 0));
 }
@@ -233,16 +233,23 @@ void donutChart(int diam, float[] angles) {
 void createVis2() {
   //TODO: sorted data will return float[] we can call for each square, conditionals based on filters will be in findMaxes()
   float[] f = new float[] {15503746,7001136,6058873};
+  float[] dAlone = {topStatesData[0],topStatesData[1],topStatesData[2]};
+  float[] carPool = {topStatesData[3],topStatesData[4],topStatesData[5]};
+  float[] usedPublic = {topStatesData[6],topStatesData[7],topStatesData[8]};
+  float[] walked = {topStatesData[9],topStatesData[10],topStatesData[11]};
+  float[] other = {topStatesData[12],topStatesData[13],topStatesData[14]};
+  float[] home = {topStatesData[15],topStatesData[16],topStatesData[17]};
+
   //float[] f = new float[] {662513,331556,291801};
   
   //first row of squares
-  topThree(400,10,f,vis2Colors[0]);
-  topThree(600,10,f,vis2Colors[1]);
-  topThree(800,10,f,vis2Colors[2]);
+  topThree(400,10,dAlone,vis2Colors[0], 70314);
+  topThree(600,10,carPool,vis2Colors[1], 9745);
+  topThree(800,10,usedPublic,vis2Colors[2], 4256);
   //second row of squares
-  topThree(400,220,f,vis2Colors[3]);
-  topThree(600,220,f,vis2Colors[4]);
-  topThree(800,220,f,vis2Colors[5]);
+  topThree(400,220,walked,vis2Colors[3], 2258);
+  topThree(600,220,other,vis2Colors[4], 1470);
+  topThree(800,220,home,vis2Colors[5], 3291);
 
 
 }
@@ -251,9 +258,9 @@ void createVis2() {
 * Create three nested squares based on input of 3 floats
 * 
 */
-void topThree(int x, int y, float[] maxes, color[] c) {
+void topThree(int x, int y, float[] maxes, color[] c, float normal) {
   for (int i = 0; i<3; i++){
-    Rectangle r = new Rectangle(x,y,maxes[i],c[i]);
+    Rectangle r = new Rectangle(x,y,maxes[i],c[i], normal);
     rectShapes.add(r);  
   }
 }
@@ -283,8 +290,7 @@ void findMaxes(){
       index++;
     }
   }
-  println(topStatesIndex);
-  
+  println(topStatesData);
 }
 
 void mouseMoved() {
@@ -338,21 +344,22 @@ class Arc {
 
 //rectangle object for vis #2
 class Rectangle{
-  float pop;
+  float pop,normal;
   int x,y,w,h;
   color c;
   //utilize pop paramater to create a proportional square (should be a normalized population value)
   //hardcoded normalization based off largest value in csv
-  Rectangle(int x, int y, float pop, color c) {
+  Rectangle(int x, int y, float pop, color c,float normal) {
     this.x = x;
     this.y = y;
     this.c = c;
     this.pop = pop;
+    this.normal = normal;
   }
   
   void draw(){
     fill(c);
-    rect(x,y,(pop/90000),(pop/90000),12,12,12,12);
+    rect(x,y,(pop/normal),(pop/normal),8,8,8,8);
   }
 }
 
