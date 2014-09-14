@@ -26,7 +26,7 @@ color[][] vis2Colors = new color[][] {{#5484FF,#5DD5FF,#152140}, {#0fe85c,#97FFB
 {#ffe800,#FFFAA5,#8F8200}, {#e8804d,#E8A695,#AB5E40}, {#cb0dff,#EA9EFF,#590670}, {#FF3042,#FFA5AF,#611219}};
 String[][] vis2States = new String[][] {{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, 
 {"Georgia", "Pennsylvania", "California"},{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}};
-
+float[][] columnData;
 
 //coordinate center of donut chart
 float circleX = 200;
@@ -42,8 +42,8 @@ int dodIndex = 0;
 int dodIndex2 = 0;
 color dodColor = #FFFFFF;
 
-ArrayList<Integer> topStates;
-
+float[] topStatesData = new float[18];
+float[] topStatesIndex = new float[18];
 
 void setup(){
   size(1000, 500);
@@ -60,7 +60,7 @@ void setup(){
 
 void createFilter() {
   //slider-filtering
-  filter = cp5.addRange("filter").setPosition(485, 430).setSize(400,20).setRange(0, 500);
+  filter = cp5.addRange("filter").setPosition(485, 430).setSize(400,20).setRange(0, 15000000);
   filter.setColorBackground(color(0,0,0));
   filter.setColorActive(color(200, 200, 0));
 }
@@ -68,13 +68,22 @@ void createFilter() {
 void createTable() {
   table = loadTable("CommuterData.csv", "header");
   states = new ArrayList<String>();
-  topStates = new ArrayList<Integer>();
   for (TableRow row : table.rows()) {
     String state_name = row.getString("State");
     states.add(state_name);
   } 
+
+  //arrays to find top values for each data column
+  float[] droveAloneData = table.getFloatColumn("Drove Alone");
+  float[] carPooledData = table.getFloatColumn("Car-pooled");
+  float[] publicData = table.getFloatColumn("Used Public Transportation");
+  float[] walkData = table.getFloatColumn("Walked");
+  float[] otherData = table.getFloatColumn("Other");
+  float[] homeData = table.getFloatColumn("Worked at home");
   
+  columnData = new float[][] {droveAloneData, carPooledData, publicData, walkData, otherData, homeData};
 }
+
 
 void createDropDown() {
   
@@ -117,8 +126,10 @@ void draw() {
   background(255);
   
   //get values from filter
-  rangeHigh = (int)filter.getLowValue();
-  rangeLow = (int)filter.getHighValue();
+  rangeLow = (int)filter.getLowValue();
+  rangeHigh = (int)filter.getHighValue();
+  findMaxes();
+    
   //get toggle values, set labels
   textSize(14);
   fill(0);
@@ -179,7 +190,6 @@ void draw() {
         }
       }
       dodValue = table.getString(index, dataNames[dodIndex]);
-      print(index);
       fill(0,0,0);
       textSize(16);
       text(state + ": " + dodValue, mouseX, mouseY);
@@ -239,7 +249,31 @@ void topThree(int x, int y, float[] maxes, color[] c) {
 }
 
 //when finding maxes place it in array based upon filtered constraints
-void findMaxes(float min, float max){
+void findMaxes(){
+  float max = 0; 
+  float maxIndex = 0;
+  float oldMax1 = 0;
+  float oldMax2 = 0;
+  int index = 0;
+  for(int i=0; i<columnData.length; i++) {
+    for(int loop=0; loop<3; loop++) {
+      if(loop == 1) { oldMax1 = max; }
+      if(loop == 2) { oldMax2 = max; }
+      
+      max = 0;
+      maxIndex = 0;
+      for(int j=1; j<columnData[i].length; j++) {
+        if((columnData[i][j] > max) && (columnData[i][j] != oldMax1) && (columnData[i][j] != oldMax2) && (columnData[i][j] > rangeLow) && (columnData[i][j] < rangeHigh)) {
+          max = columnData[i][j];
+          maxIndex = j;
+        }
+      }
+      topStatesData[index] = max;
+      topStatesIndex[index] = maxIndex;
+      index++;
+    }
+  }
+  println(topStatesIndex);
   
 }
 
