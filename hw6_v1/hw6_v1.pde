@@ -114,7 +114,6 @@ void createToggle() {
 
 void controlEvent(ControlEvent theEvent) {
   if (theEvent.isGroup()) {
-    println(theEvent.group().name());
     if (theEvent.group().name() == "states") {//name of dropdownlist
       currState = (int)theEvent.group().getValue();
       print(currState); 
@@ -136,7 +135,6 @@ void draw() {
   //get values from filter
   rangeLow = (int)filter.getLowValue();
   rangeHigh = (int)filter.getHighValue();
-  println(rangeHigh);
   findMaxes();
  
     
@@ -163,7 +161,7 @@ void draw() {
   //draw labels for vis2
   //coordinates of first letter of each row
   int x = 445;
-  int y = 200;
+  int y = 215;
   int x2 = 465;
   int y2 = 410;
   for (int i = 0; i < 3; i++){
@@ -234,33 +232,49 @@ void createVis2() {
   //TODO: sorted data will return float[] we can call for each square, conditionals based on filters will be in findMaxes()
   float[] f = new float[] {15503746,7001136,6058873};
   float[] dAlone = {topStatesData[0],topStatesData[1],topStatesData[2]};
+  dAlone = normalize(dAlone);
   float[] carPool = {topStatesData[3],topStatesData[4],topStatesData[5]};
+  carPool = normalize(carPool);
   float[] usedPublic = {topStatesData[6],topStatesData[7],topStatesData[8]};
+  usedPublic = normalize(usedPublic);
   float[] walked = {topStatesData[9],topStatesData[10],topStatesData[11]};
+  walked = normalize(walked);
   float[] other = {topStatesData[12],topStatesData[13],topStatesData[14]};
+  other = normalize(other);
   float[] home = {topStatesData[15],topStatesData[16],topStatesData[17]};
-
-  //float[] f = new float[] {662513,331556,291801};
+  home = normalize(home);
   
   //first row of squares
-  topThree(400,10,dAlone,vis2Colors[0], 70314);
-  topThree(600,10,carPool,vis2Colors[1], 9745);
-  topThree(800,10,usedPublic,vis2Colors[2], 4256);
+  topThree(400,10,dAlone,vis2Colors[0]);
+  topThree(600,10,carPool,vis2Colors[1]);
+  topThree(800,10,usedPublic,vis2Colors[2]);
   //second row of squares
-  topThree(400,220,walked,vis2Colors[3], 2258);
-  topThree(600,220,other,vis2Colors[4], 1470);
-  topThree(800,220,home,vis2Colors[5], 3291);
+  topThree(400,220,walked,vis2Colors[3]);
+  topThree(600,220,other,vis2Colors[4]);
+  topThree(800,220,home,vis2Colors[5]);
+  
+}
 
-
+float[] normalize(float[] arr){
+    int sum = 0;
+    println(arr);
+    for (float d:arr){
+      sum += d;
+    }
+    for (int i = 0; i < 3; i++){
+      arr[i] = arr[i]/sum;
+    }
+    println(arr);
+    return arr;
 }
 
 /*
 * Create three nested squares based on input of 3 floats
 * 
 */
-void topThree(int x, int y, float[] maxes, color[] c, float normal) {
+void topThree(int x, int y, float[] maxes, color[] c) {
   for (int i = 0; i<3; i++){
-    Rectangle r = new Rectangle(x,y,maxes[i],c[i], normal);
+    Rectangle r = new Rectangle(x,y,maxes[i],c[i]);
     rectShapes.add(r);  
   }
 }
@@ -290,7 +304,6 @@ void findMaxes(){
       index++;
     }
   }
-  println(topStatesData);
 }
 
 void mouseMoved() {
@@ -344,22 +357,21 @@ class Arc {
 
 //rectangle object for vis #2
 class Rectangle{
-  float pop,normal;
+  float pop;
   int x,y,w,h;
   color c;
   //utilize pop paramater to create a proportional square (should be a normalized population value)
   //hardcoded normalization based off largest value in csv
-  Rectangle(int x, int y, float pop, color c,float normal) {
+  Rectangle(int x, int y, float pop, color c) {
     this.x = x;
     this.y = y;
     this.c = c;
     this.pop = pop;
-    this.normal = normal;
   }
   
   void draw(){
     fill(c);
-    rect(x,y,(pop/normal),(pop/normal),8,8,8,8);
+    rect(x,y,pop*195,pop*195,8,8,8,8);
   }
 }
 
