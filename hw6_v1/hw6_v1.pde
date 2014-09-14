@@ -20,6 +20,14 @@ color[] colors = {#5484FF,#0fe85c,#ffe800,#e8804d,#cb0dff,#FF3042};
 String[] dataNames = {"Drove Alone", "Car-pooled", "Used Public Transportation", "Walked", "Other", "Worked at home"};
 
 
+//color arrays of each nested square
+//cAlone, cPool, cPublic, cWalk, cOther, cHome
+color[][] vis2Colors = new color[][] {{#5484FF,#5DD5FF,#152140}, {#0fe85c,#97FFB7,#18401D}, 
+{#ffe800,#FFFAA5,#8F8200}, {#e8804d,#E8A695,#AB5E40}, {#cb0dff,#EA9EFF,#590670}, {#FF3042,#FFA5AF,#611219}};
+String[][] vis2States = new String[][] {{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, 
+{"Georgia", "Pennsylvania", "California"},{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}};
+
+
 //coordinate center of donut chart
 float circleX = 200;
 float circleY = 250;
@@ -31,6 +39,8 @@ ArrayList<Rectangle> rectShapes;
 //details on demand variables
 boolean detailOnDemand = false;
 int dodIndex = 0;
+int dodIndex2 = 0;
+color dodColor = #FFFFFF;
 
 ArrayList<Integer> topStates;
 
@@ -153,10 +163,27 @@ void draw() {
   
   loadPixels();
   if(detailOnDemand == true) {
-    String dodValue = table.getString(currState, dataNames[dodIndex]);
-    fill(0,0,0);
-    textSize(16);
-    text(dataNames[dodIndex] + ": " + dodValue, mouseX, mouseY);
+    String dodValue = "";
+    if(dodIndex2 < 0) { //use format for first vis
+      dodValue = table.getString(currState, dataNames[dodIndex]);
+      fill(0,0,0);
+      textSize(16);
+      text(dataNames[dodIndex] + ": " + dodValue, mouseX, mouseY);
+    }
+    else {
+      String state = vis2States[dodIndex][dodIndex2] +  " ";
+      int index = 0;
+      for(int i=0; i<states.size(); i++){
+        if (states.get(i).equals(state) == true) {
+          index = i;
+        }
+      }
+      dodValue = table.getString(index, dataNames[dodIndex]);
+      print(index);
+      fill(0,0,0);
+      textSize(16);
+      text(state + ": " + dodValue, mouseX, mouseY);
+    }
   }
 }
 
@@ -188,22 +215,14 @@ void createVis2() {
   float[] f = new float[] {15503746,7001136,6058873};
   //float[] f = new float[] {662513,331556,291801};
   
-  //color arrays of each nested square
-  color[] cAlone = new color[] {#5484FF,#5DD5FF,#152140};
-  color[] cPool = new color[] {#0fe85c,#97FFB7,#18401D};
-  color[] cPublic = new color[] {#ffe800,#FFFAA5,#8F8200};
-  color[] cWalk = new color[] {#e8804d,#E8A695,#AB5E40};
-  color[] cOther = new color[] {#cb0dff,#EA9EFF,#590670};
-  color[] cHome = new color[] {#FF3042,#FFA5AF,#611219};
-  
   //first row of squares
-  topThree(400,10,f,cAlone);
-  topThree(600,10,f,cPool);
-  topThree(800,10,f,cPublic);
+  topThree(400,10,f,vis2Colors[0]);
+  topThree(600,10,f,vis2Colors[1]);
+  topThree(800,10,f,vis2Colors[2]);
   //second row of squares
-  topThree(400,220,f,cWalk);
-  topThree(600,220,f,cOther);
-  topThree(800,220,f,cHome);
+  topThree(400,220,f,vis2Colors[3]);
+  topThree(600,220,f,vis2Colors[4]);
+  topThree(800,220,f,vis2Colors[5]);
 
 
 }
@@ -226,36 +245,45 @@ void findMaxes(float min, float max){
 
 void mouseMoved() {
   detailOnDemand = false;
+  dodIndex = -1;
+  dodIndex2 = -1;
   color c = pixels[mouseY*width + mouseX];
-  for(int i = 0; i<colors.length; i++) {
-    if(c == colors[i]) {
-      detailOnDemand = true;
-      dodIndex = i;
+  dodColor = c;
+  if(mouseX < 400) { //use vis1 colors
+    for(int i = 0; i<colors.length; i++) {
+      if(c == colors[i]) {
+        detailOnDemand = true;
+        dodIndex = i;
+      }
     }
   }
+  
+  else {
+    for(int i = 0; i<vis2Colors.length; i++) {
+      for(int j = 0; j<3; j++) {
+        if(c == vis2Colors[i][j]) {
+          detailOnDemand = true;
+          dodIndex = i;
+          dodIndex2 = j;
+        }
+      }
+    }
+  } 
 }
 
 class Arc {
   float diam, lastAngle, newAngle;
   int color_index;
-  boolean highlight;
   Arc(float diam, float lastAngle, float newAngle, int color_index) {
   //fill in constructor - make sure to add any necessary parameters
     this.diam = diam;
     this.lastAngle = lastAngle;
     this.newAngle = newAngle;
     this.color_index = color_index;
-    highlight = false;
   }
  
   //draw the circle
   void draw(){
-    if(highlight == true) {
-      stroke(0, 0, 0);
-    }
-    else {
-      noStroke();
-    }
     fill(colors[color_index]);
     arc(circleX, circleY, diam, diam, lastAngle, newAngle);
   }
