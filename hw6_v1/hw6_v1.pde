@@ -155,8 +155,14 @@ void draw() {
     if(states.get(currState).equals(vis2State)) {
       arcShapes.get(dodIndex).highlight = true;
     }
-    
   }
+  else if(detailOnDemand == true && dodIndex2 < 0) {
+    //dodColor;
+    //topStatesIndex[index*3]
+    //if() {
+    //  rectShapes.get(topStatesIndex).highlight = true; }
+  }
+  
   
   for(Arc a : arcShapes) {
     a.draw();
@@ -253,14 +259,12 @@ void createVis2() {
 
 float[] normalize(float[] arr){
     int sum = 0;
-    println(arr);
     for (float d:arr){
       sum += d;
     }
     for (int i = 0; i < 3; i++){
       arr[i] = arr[i]/sum;
     }
-    println(arr);
     return arr;
 }
 
@@ -354,11 +358,11 @@ class Arc {
     this.color_index = color_index;
     highlight = false;
   }
- 
+  
   //draw the arc
   void draw(){
     if(highlight == true) {
-      
+      fill(255, 255, 255);
       arc(circleX, circleY, diam, diam, lastAngle, newAngle);
     }
     else { 
