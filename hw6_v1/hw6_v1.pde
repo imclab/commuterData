@@ -138,12 +138,7 @@ void draw() {
   rangeLow = (int)filter.getLowValue();
   rangeHigh = (int)filter.getHighValue();
   
-  if(toggleValue == 0){
-    findRawMaxes();
-  }
-  else {
-    findPercentMaxes();
-  }
+  findMaxes();
   
   for(Rectangle r : rectShapes) {
     r.draw();
@@ -259,12 +254,13 @@ void topThree(int x, int y, float[] maxes, color[] c) {
 }
 
 //when finding maxes place it in array based upon filtered constraints
-void findRawMaxes(){
+void findMaxes(){
   float max = 0; 
   float maxIndex = 0;
   float oldMax1 = 0;
   float oldMax2 = 0;
   int index = 0;
+  float data = 0;
   for(int i=0; i<columnData.length; i++) {
     for(int loop=0; loop<3; loop++) {
       if(loop == 1) { oldMax1 = max; }
@@ -273,35 +269,14 @@ void findRawMaxes(){
       max = 0;
       maxIndex = 0;
       for(int j=1; j<columnData[i].length; j++) {
-        if((columnData[i][j] > max) && (columnData[i][j] != oldMax1) && (columnData[i][j] != oldMax2) && (columnData[i][j] > rangeLow) && (columnData[i][j] < rangeHigh)) {
-          max = columnData[i][j];
-          maxIndex = j;
+        if(toggleValue == 0) {
+          data = columnData[i][j];
         }
-      }
-      topStatesData[index] = max;
-      topStatesIndex[index] = maxIndex;
-      index++;
-    }
-  }  
-}
-
-void findPercentMaxes(){
-  float max = 0; 
-  float maxIndex = 0;
-  float oldMax1 = 0;
-  float oldMax2 = 0;
-  int index = 0;
-  for(int i=0; i<columnData.length; i++) {
-    for(int loop=0; loop<3; loop++) {
-      if(loop == 1) { oldMax1 = max; }
-      if(loop == 2) { oldMax2 = max; }
-      
-      max = 0;
-      maxIndex = 0;
-      for(int j=1; j<columnData[i].length; j++) {
-        float percent = columnData[i][j]/totalWorkers[j] * 100;
-        if((percent > max) && (percent != oldMax1) && (percent != oldMax2) && (columnData[i][j] > rangeLow) && (columnData[i][j] < rangeHigh)) {
-          max = percent;
+        if(toggleValue == 1) {
+          data = (columnData[i][j] / totalWorkers[j]) * 100;
+        }
+        if((data > max) && (data != oldMax1) && (data != oldMax2) && (data > rangeLow) && (data < rangeHigh)) {
+          max = data;
           maxIndex = j;
         }
       }
