@@ -24,9 +24,8 @@ String[] dataNames = {"Drove Alone", "Car-pooled", "Used Public Transportation",
 //cAlone, cPool, cPublic, cWalk, cOther, cHome
 color[][] vis2Colors = new color[][] {{#5484FF,#5DD5FF,#152140}, {#0fe85c,#97FFB7,#18401D}, 
 {#ffe800,#FFFAA5,#8F8200}, {#e8804d,#E8A695,#AB5E40}, {#cb0dff,#EA9EFF,#590670}, {#FF3042,#FFA5AF,#611219}};
-String[][] vis2States = new String[][] {{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, 
-{"Georgia", "Pennsylvania", "California"},{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}};
 float[][] columnData;
+float[] totalWorkers;
 
 //coordinate center of donut chart
 float circleX = 200;
@@ -41,6 +40,7 @@ boolean detailOnDemand = false;
 int dodIndex = 0;
 int dodIndex2 = 0;
 color dodColor = #FFFFFF;
+
 
 float[] topStatesData = new float[18];
 float[] topStatesIndex = new float[18];
@@ -80,6 +80,7 @@ void createTable() {
   float[] walkData = table.getFloatColumn("Walked");
   float[] otherData = table.getFloatColumn("Other");
   float[] homeData = table.getFloatColumn("Worked at home");
+  totalWorkers = table.getFloatColumn("Total Workers");
   
   columnData = new float[][] {droveAloneData, carPooledData, publicData, walkData, otherData, homeData};
 }
@@ -114,29 +115,15 @@ void createToggle() {
 
 void controlEvent(ControlEvent theEvent) {
   if (theEvent.isGroup()) {
-    println(theEvent.group().name());
     if (theEvent.group().name() == "states") {//name of dropdownlist
-      currState = (int)theEvent.group().getValue();
-      print(currState); 
+      currState = (int)theEvent.group().getValue(); 
     }
-//    if (theEvent.group().name() == "filter") {
-//      //get values from filter
-//      rangeLow = (int)filter.getLowValue();
-//      rangeHigh = (int)filter.getHighValue();
-//      println(rangeHigh);
-//      findMaxes();
-//    }
     else if(theEvent.isController()) {}
   }
 }
 
 void draw() {
   background(255);
-  
-  //get values from filter
-  rangeLow = (int)filter.getLowValue();
-  rangeHigh = (int)filter.getHighValue();
-  findMaxes();
  
     
   //get toggle values, set labels
@@ -147,17 +134,38 @@ void draw() {
   text("Percentage", 730, 485);
   toggleValue = (int)dataToggle.getValue();
   
-  for(Arc a : arcShapes) {
-    a.draw();
+  //get values from filter
+  rangeLow = (int)filter.getLowValue();
+  rangeHigh = (int)filter.getHighValue();
+  
+  if(toggleValue == 0){
+    findRawMaxes();
+  }
+  else {
+    findPercentMaxes();
   }
   
   for(Rectangle r : rectShapes) {
     r.draw();
   }
+ 
   
   //instantiate each visualization
   createVis1();
   createVis2();
+  
+  //linking
+  if(detailOnDemand == true && dodIndex2 >= 0) {
+    String vis2State = states.get((int)topStatesIndex[dodIndex*3 + dodIndex2]);
+    if(states.get(currState).equals(vis2State)) {
+      arcShapes.get(dodIndex).highlight = true;
+    }
+    
+  }
+  
+  for(Arc a : arcShapes) {
+    a.draw();
+  }
   
   //draw labels for vis2
   //coordinates of first letter of each row
@@ -192,7 +200,6 @@ void draw() {
     }
     else {
       String state = states.get((int)topStatesIndex[dodIndex*3 + dodIndex2]);
-     
       fill(0,0,0);
       textSize(16);
       text(state + ": " + topStatesData[dodIndex*3 + dodIndex2], mouseX, mouseY);
@@ -252,9 +259,9 @@ void topThree(int x, int y, float[] maxes, color[] c) {
 }
 
 //when finding maxes place it in array based upon filtered constraints
-void findMaxes(){
+void findRawMaxes(){
   float max = 0; 
-  float maxIndex = ;
+  float maxIndex = 0;
   float oldMax1 = 0;
   float oldMax2 = 0;
   int index = 0;
@@ -275,9 +282,34 @@ void findMaxes(){
       topStatesIndex[index] = maxIndex;
       index++;
     }
-  }
-  println(topStatesIndex);
-  
+  }  
+}
+
+void findPercentMaxes(){
+  float max = 0; 
+  float maxIndex = 0;
+  float oldMax1 = 0;
+  float oldMax2 = 0;
+  int index = 0;
+  for(int i=0; i<columnData.length; i++) {
+    for(int loop=0; loop<3; loop++) {
+      if(loop == 1) { oldMax1 = max; }
+      if(loop == 2) { oldMax2 = max; }
+      
+      max = 0;
+      maxIndex = 0;
+      for(int j=1; j<columnData[i].length; j++) {
+        float percent = columnData[i][j]/totalWorkers[j] * 100;
+        if((percent > max) && (percent != oldMax1) && (percent != oldMax2) && (columnData[i][j] > rangeLow) && (columnData[i][j] < rangeHigh)) {
+          max = percent;
+          maxIndex = j;
+        }
+      }
+      topStatesData[index] = max;
+      topStatesIndex[index] = maxIndex;
+      index++;
+    }
+  }  
 }
 
 void mouseMoved() {
@@ -314,18 +346,26 @@ void mouseMoved() {
 class Arc {
   float diam, lastAngle, newAngle;
   int color_index;
+  boolean highlight;
   Arc(float diam, float lastAngle, float newAngle, int color_index) {
   //fill in constructor - make sure to add any necessary parameters
     this.diam = diam;
     this.lastAngle = lastAngle;
     this.newAngle = newAngle;
     this.color_index = color_index;
+    highlight = false;
   }
  
-  //draw the circle
+  //draw the arc
   void draw(){
-    fill(colors[color_index]);
-    arc(circleX, circleY, diam, diam, lastAngle, newAngle);
+    if(highlight == true) {
+      
+      arc(circleX, circleY, diam, diam, lastAngle, newAngle);
+    }
+    else { 
+      fill(colors[color_index]); 
+      arc(circleX, circleY, diam, diam, lastAngle, newAngle);
+    }
   }
 }
 
