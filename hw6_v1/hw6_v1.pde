@@ -20,14 +20,6 @@ color[] colors = {#5484FF,#0fe85c,#ffe800,#e8804d,#cb0dff,#FF3042};
 String[] dataNames = {"Drove Alone", "Car-pooled", "Used Public Transportation", "Walked", "Other", "Worked at home"};
 
 
-//color arrays of each nested square
-//cAlone, cPool, cPublic, cWalk, cOther, cHome
-color[][] vis2Colors = new color[][] {{#5484FF,#5DD5FF,#152140}, {#0fe85c,#97FFB7,#18401D}, 
-{#ffe800,#FFFAA5,#8F8200}, {#e8804d,#E8A695,#AB5E40}, {#cb0dff,#EA9EFF,#590670}, {#FF3042,#FFA5AF,#611219}};
-String[][] vis2States = new String[][] {{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, 
-{"Georgia", "Pennsylvania", "California"},{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}};
-float[][] columnData;
-
 //coordinate center of donut chart
 float circleX = 200;
 float circleY = 250;
@@ -44,6 +36,14 @@ color dodColor = #FFFFFF;
 
 float[] topStatesData = new float[18];
 float[] topStatesIndex = new float[18];
+
+//color arrays of each nested square
+//cAlone, cPool, cPublic, cWalk, cOther, cHome
+color[][] vis2Colors = new color[][] {{#5484FF,#5DD5FF,#152140}, {#0fe85c,#97FFB7,#18401D}, 
+{#ffe800,#FFFAA5,#8F8200}, {#e8804d,#E8A695,#AB5E40}, {#cb0dff,#EA9EFF,#590670}, {#FF3042,#FFA5AF,#611219}};
+String[][] vis2States = new String[][] {{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, 
+{"Georgia", "Pennsylvania", "California"},{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}};
+float[][] columnData;
 
 void setup(){
   size(1000, 500);
@@ -150,13 +150,14 @@ void draw() {
     a.draw();
   }
   
-  for(Rectangle r : rectShapes) {
-    r.draw();
-  }
   
   //instantiate each visualization
   createVis1();
   createVis2();
+  
+  for(Rectangle r : rectShapes) {
+    r.draw();
+  }
   
   //draw labels for vis2
   //coordinates of first letter of each row
@@ -229,8 +230,7 @@ void donutChart(int diam, float[] angles) {
 
 //creation of vis2, called once in draw
 void createVis2() {
-  //TODO: sorted data will return float[] we can call for each square, conditionals based on filters will be in findMaxes()
-  float[] f = new float[] {15503746,7001136,6058873};
+  
   float[] dAlone = {topStatesData[0],topStatesData[1],topStatesData[2]};
   dAlone = normalize(dAlone);
   float[] carPool = {topStatesData[3],topStatesData[4],topStatesData[5]};
@@ -257,14 +257,12 @@ void createVis2() {
 
 float[] normalize(float[] arr){
     int sum = 0;
-    println(arr);
     for (float d:arr){
       sum += d;
     }
     for (int i = 0; i < 3; i++){
       arr[i] = arr[i]/sum;
     }
-    println(arr);
     return arr;
 }
 
