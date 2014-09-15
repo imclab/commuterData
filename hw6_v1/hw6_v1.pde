@@ -23,7 +23,7 @@ String[] dataNames = {"Drove Alone", "Car-pooled", "Used Public Transportation",
 
 //color arrays of each nested square
 //cAlone, cPool, cPublic, cWalk, cOther, cHome
-color[][] vis2Colors = new color[][] {{#152000,#5484FF,#5DD5FF}, {#18401D,#0fe85c,#97FFB7}, 
+color[][] vis2Colors = new color[][] {{#0B13FF,#5484FF,#5DD5FF}, {#18401D,#0fe85c,#97FFB7}, 
 {#8F8200,#ffe800,#FFFAA5}, {#AB5E40,#e8804d,#E8A695}, {#590670,#cb0dff,#EA9EFF}, {#611219,#FF3042,#FFA5AF}};
 float[][] columnData;
 float[] totalWorkers;
@@ -246,6 +246,7 @@ void donutChart(int diam, float[] angles) {
 //creation of vis2, called once in draw
 void createVis2() {
   float[] stData = steralize(topStatesData);
+  
   float[] dAlone = {stData[0],stData[1],stData[2]};
   float[] carPool = {stData[3],stData[4],stData[5]};
   float[] usedPublic = {stData[6],stData[7],stData[8]};
@@ -264,23 +265,23 @@ void createVis2() {
 }
 
 float[] steralize(float[] arr){
-  float[] clone = arr;
-  float min = clone[0];
-  for (int i = 1; i < clone.length; i++) {
-      if (clone[i] < min) {
-          min = clone[i];
+  float[] clone = new float[18];
+  float min = arr[0];
+  for (int i = 1; i < arr.length; i++) {
+      if (arr[i] < min) {
+          min = arr[i];
       }
   }
   
-  float max = clone[0];
-  for ( int i = 1; i < clone.length; i++) {
-    if ( clone[i] > max) {
-      max = clone[i];
+  float max = arr[0];
+  for ( int i = 1; i < arr.length; i++) {
+    if ( arr[i] > max) {
+      max = arr[i];
     }
   }
   
   for (int i = 0; i < 18; i++){
-    clone[i] = (((clone[i]-min)*1.3)/(max-min))+0.2;
+    clone[i] = (((arr[i]-min)*1.3)/(max-min))+0.2;
   }
   return clone;
 }
@@ -397,7 +398,6 @@ class Rectangle{
   int x,y,w,h, strokeColor;
   color c;
   //utilize pop paramater to create a proportional square (should be a normalized population value)
-  //hardcoded normalization based off largest value in csv
   Rectangle(int x, int y, float pop, color c) {
     this.x = x;
     this.y = y;
@@ -415,12 +415,20 @@ class Rectangle{
     if(strokeColor == #000000) {
       stroke(strokeColor);
       fill(c);
-      rect(x,y,pop*195,pop*195,8,8,8,8);
+      rect(x,y,pop*65,pop*65,8,8,8,8);
     }
     else {
       noStroke();
       fill(c);
+<<<<<<< HEAD
       rect(x,y,pop*65,pop*65,10,10,10,10);
     }
+=======
+      rect(x,y,pop*65,pop*65,8,8,8,8);
+    }
+
+    fill(c);
+    rect(x,y,pop*65,pop*65,8,8,8,8);
+>>>>>>> e5b7ae6d9c77d6800d2be302f467208026e95e9e
   }
 }
