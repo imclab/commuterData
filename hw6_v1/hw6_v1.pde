@@ -43,8 +43,9 @@ int perx = 815;
 int pery = 650;
 
 //vis1, vis2 variables
-ArrayList<Arc> arcShapes;
-ArrayList<Rectangle> rectShapes;
+Arc[] arcShapes = new Arc[6];
+Rectangle[] rectShapes = new Rectangle[18];
+int rectCount;
 
 //details on demand variables
 boolean detailOnDemand = false;
@@ -64,8 +65,6 @@ void setup(){
   createToggle();
   createFilter();
 
-  arcShapes = new ArrayList<Arc>();
-  rectShapes = new ArrayList<Rectangle>();
 }
 
 void createFilter() {
@@ -134,15 +133,7 @@ void controlEvent(ControlEvent theEvent) {
 
 void draw() {
   background(255);
-  for(int i = 0; i<rectShapes.size(); i++) {
-    rectShapes.remove(i);
-  }
-  
-  for(int i = 0; i<arcShapes.size(); i++) {
-    arcShapes.remove(i);
-  }
-  println(arcShapes.size());
-    
+  rectCount = 0;
   //get toggle values, set labels
   textSize(15.5);
   fill(0);
@@ -178,14 +169,14 @@ void draw() {
   if(detailOnDemand == true && dodIndex2 >= 0) {
     String vis2State = states.get((int)topStatesIndex[dodIndex*3 + dodIndex2]);
     if(states.get(currState).equals(vis2State)) {
-      arcShapes.get(dodIndex).highlight();
+      arcShapes[dodIndex].highlight();
     }
   }
   else if(detailOnDemand == true && dodIndex2 < 0) {  
     for(int i = 0; i<3; i++) {
       String vis2State = states.get((int)topStatesIndex[dodIndex*3 + i]);
       if(states.get(currState).equals(vis2State)) {
-        rectShapes.get(dodIndex*3 + i).highlight();
+        rectShapes[dodIndex*3 + i].highlight();
       }
     }
   }
@@ -247,7 +238,7 @@ void donutChart(int diam, float[] angles) {
   float lastAngle = 0;
   //give arc i for the color index
   for (int i = 0; i < angles.length; i++) {
-    arcShapes.add(new Arc(diam, lastAngle, lastAngle+radians(angles[i]), i));
+    arcShapes[i] = new Arc(diam, lastAngle, lastAngle+radians(angles[i]), i);
     lastAngle += radians(angles[i]);
   }
 }
@@ -303,7 +294,8 @@ void topThree(int x, int y, float[] maxes, color[] c) {
     Rectangle r = new Rectangle(x,y,maxes[i],c[i]);
     //x -= 70;
     y += 100;
-    rectShapes.add(r);  
+    rectShapes[rectCount] = r;
+    rectCount++;  
   }
 }
 
@@ -420,7 +412,6 @@ class Rectangle{
   }
   
   void draw(){
-<<<<<<< HEAD
     if(strokeColor == #000000) {
       stroke(strokeColor);
       fill(c);
@@ -429,11 +420,7 @@ class Rectangle{
     else {
       noStroke();
       fill(c);
-      rect(x,y,pop*195,pop*195,8,8,8,8);
+      rect(x,y,pop*65,pop*65,10,10,10,10);
     }
-=======
-    fill(c);
-    rect(x,y,pop*65,pop*65,10,10,10,10);
->>>>>>> 4a9c5919f7a6206ae9052f005c4e04e86ff1bb90
   }
 }
