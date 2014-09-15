@@ -3,6 +3,11 @@ commuterData
 
 4460 info vis of commuter data by state
 
+TODO
+* Percentage vs. Absolute Value of population needed
+* DoD still needed
+* Linking/Brushing between VIS1 + VIS2
+
 Visualization #1:	Show	the	breakdown	of	commuters	by	state.	You	should	allow	the	
 user	to	select	which	state	is	shown	(this	should	most	likely	be	a	dropdown	list,	but	if	you	
 are ambitious	you	could	look	into	using	a	state	map	to	select	the	state	that	is	shown).	
@@ -24,21 +29,18 @@ on	demand	should	be	present	for	this	visualization	as	well.
 * Nested Squares chosen as Vis #2 format
 * Top 3 states for all 6 categories needed
 * Dual filter needed for population shift
-* Percentage vs. Absolute Value of population needed
-* DoD still needed
 
 Additional	linking	between	1	and	2	should	be	present so	that	if	that	state	shown	in	1	is	
 also	present	in	2,	both	should	be	highlighted	when	moused	over.
-* Linking/Brushing needed once Vis #2 created
 
 To Recap
 You	need	two	visualizations.
-* One	to	show	break-down	by	state	
-** allows the	state	to	be	selected	somehow	
-** needs	to	have	details	on	demand
-* One	to	show	top	3	of	each	category	
-** needs	to	filterable
-** needs	to	be	able	to	switch	between	percentages	and	straight	numbers	
-** needs	to	have	brushing	and	linking	within	itself	
-** needs	to	have	details	on	demand
-** Brushing/Linking	between	the	two	visualizations	is	required	
+* One	to	show	break-down	by	state	(completed)
+* allows the	state	to	be	selected	somehow	(completed)
+* needs	to	have	details	on	demand (completed)
+* One	to	show	top	3	of	each	category (completed)
+* needs	to	filterable (completed)
+* needs	to	be	able	to	switch	between	percentages	and	straight	numbers	
+* needs	to	have	brushing	and	linking	within	itself	
+* needs	to	have	details	on	demand (completed)
+* Brushing/Linking	between	the	two	visualizations	is	required	
