@@ -1,4 +1,5 @@
 import controlP5.*;
+import java.lang.Math;
 ControlP5 cp5;
 
 //dropDown variables
@@ -22,14 +23,24 @@ String[] dataNames = {"Drove Alone", "Car-pooled", "Used Public Transportation",
 
 //color arrays of each nested square
 //cAlone, cPool, cPublic, cWalk, cOther, cHome
-color[][] vis2Colors = new color[][] {{#5484FF,#5DD5FF,#152140}, {#0fe85c,#97FFB7,#18401D}, 
-{#ffe800,#FFFAA5,#8F8200}, {#e8804d,#E8A695,#AB5E40}, {#cb0dff,#EA9EFF,#590670}, {#FF3042,#FFA5AF,#611219}};
+color[][] vis2Colors = new color[][] {{#0B13FF,#5484FF,#5DD5FF}, {#18401D,#0fe85c,#97FFB7}, 
+{#8F8200,#ffe800,#FFFAA5}, {#AB5E40,#e8804d,#E8A695}, {#590670,#cb0dff,#EA9EFF}, {#611219,#FF3042,#FFA5AF}};
 float[][] columnData;
 float[] totalWorkers;
 
-//coordinate center of donut chart
+//coordinates of objects
 float circleX = 200;
-float circleY = 250;
+float circleY = 350;
+int slidex = 560;
+int slidey = 600;
+int dropx = 150;
+int dropy = 360;
+int togglex = 745;
+int toggley = 635;
+int rawx = 650;
+int rawy = 650;
+int perx = 815;
+int pery = 650;
 
 //vis1, vis2 variables
 ArrayList<Arc> arcShapes;
@@ -41,23 +52,11 @@ int dodIndex = 0;
 int dodIndex2 = 0;
 color dodColor = #FFFFFF;
 
-
 float[] topStatesData = new float[18];
 float[] topStatesIndex = new float[18];
 
-<<<<<<< HEAD
-=======
-//color arrays of each nested square
-//cAlone, cPool, cPublic, cWalk, cOther, cHome
-color[][] vis2Colors = new color[][] {{#152140,#5DD5FF,#5484FF}, {#18401D,#97FFB7,#0fe85c}, 
-{#8F8200,#FFFAA5,#ffe800}, {#AB5E40,#E8A695,#e8804d}, {#590670,#EA9EFF,#cb0dff}, {#611219,#FFA5AF,#FF3042}};
-String[][] vis2States = new String[][] {{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, 
-{"Georgia", "Pennsylvania", "California"},{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}};
-float[][] columnData;
-
->>>>>>> cda49ceeabd8b78578dddc4fdb047d0b4141b324
 void setup(){
-  size(1000, 500);
+  size(1250, 700);
   cp5 = new ControlP5(this);
   
   createTable();
@@ -71,7 +70,8 @@ void setup(){
 
 void createFilter() {
   //slider-filtering
-  filter = cp5.addRange("filter").setPosition(485, 430).setSize(400,20).setRange(240000, 16000000);
+  filter = cp5.addRange("filter").setPosition(slidex, slidey).setSize(420,30).setRange(240000, 16000000).setValue(16000000);
+
   filter.setColorBackground(color(0,0,0));
   filter.setColorActive(color(200, 200, 0));
 }
@@ -100,7 +100,7 @@ void createTable() {
 void createDropDown() {
   
   //positioning of state dropdown
-  dropDown = cp5.addDropdownList("states").setPosition(150, 260);
+  dropDown = cp5.addDropdownList("states").setPosition(dropx, dropy);
   dropDown.setItemHeight(20);
   dropDown.setBarHeight(15);
   dropDown.captionLabel().set("States");
@@ -121,7 +121,8 @@ void createDropDown() {
 }
 
 void createToggle() {
-  dataToggle = cp5.addToggle("data Toggle").setPosition(660, 470).setSize(50,20).setMode(ControlP5.SWITCH);
+  dataToggle = cp5.addToggle("data Toggle").setPosition(togglex, toggley).setSize(50,20).setMode(ControlP5.SWITCH);
+  dataToggle.setColorBackground(color(0,0,0));
 }
 
 void controlEvent(ControlEvent theEvent) {
@@ -135,14 +136,24 @@ void controlEvent(ControlEvent theEvent) {
 
 void draw() {
   background(255);
- 
+  for(int i = 0; i<rectShapes.size(); i++) {
+    rectShapes.remove(i);
+  }
+  
+  for(int i = 0; i<arcShapes.size(); i++) {
+    arcShapes.remove(i);
+  }
+  println(arcShapes.size());
     
   //get toggle values, set labels
-  textSize(14);
+  textSize(15.5);
   fill(0);
-  text("Raw Value", 570, 485);
+  text("Commuter Data By State", 80, 80);
   fill(0);
-  text("Percentage", 730, 485);
+  text("By: Justin Luk * Rebecca Norton", 80, 100);
+  text("Raw Value", rawx, rawy);
+  fill(0);
+  text("Percentage", perx, pery);
   toggleValue = (int)dataToggle.getValue();
   
   //get values from filter
@@ -150,48 +161,52 @@ void draw() {
   rangeHigh = (int)filter.getHighValue();
   
   findMaxes();
-  
-  for(Rectangle r : rectShapes) {
-    r.draw();
-  }
  
   
   //instantiate each visualization
   createVis1();
   createVis2();
   
-  //linking
-  if(detailOnDemand == true && dodIndex2 >= 0) {
-    String vis2State = states.get((int)topStatesIndex[dodIndex*3 + dodIndex2]);
-    if(states.get(currState).equals(vis2State)) {
-      arcShapes.get(dodIndex).highlight = true;
-    }
-    
+  for(Rectangle r : rectShapes) {
+    r.draw();
   }
   
   for(Arc a : arcShapes) {
     a.draw();
   }
+  println();
+  
+    //linking
+  if(detailOnDemand == true && dodIndex2 >= 0) {
+    String vis2State = states.get((int)topStatesIndex[dodIndex*3 + dodIndex2]);
+    if(states.get(currState).equals(vis2State)) {
+      arcShapes.get(dodIndex).highlight();
+    }
+  }
+  else if(detailOnDemand == true && dodIndex2 < 0) {  
+    for(int i = 0; i<3; i++) {
+      String vis2State = states.get((int)topStatesIndex[dodIndex*3 + i]);
+      if(states.get(currState).equals(vis2State)) {
+        rectShapes.get(dodIndex*3 + i).highlight();
+      }
+    }
+  }
   
   //draw labels for vis2
   //coordinates of first letter of each row
-  int x = 445;
-<<<<<<< HEAD
-  int y = 200;
-=======
-  int y = 20;
->>>>>>> cda49ceeabd8b78578dddc4fdb047d0b4141b324
-  int x2 = 465;
-  int y2 = 235;
+  int rowLabel1x = 485;
+  int rowLabel1y = 20;
+  int rowLabel2x = 490;
+  int rowLabel2y = 335;
   for (int i = 0; i < 3; i++){
     fill(0);
-    text(dataNames[i],x,y);
-    x += 180;
+    text(dataNames[i],rowLabel1x,rowLabel1y);
+    rowLabel1x += 260;
   }
   for (int i = 3; i < 6; i++){
-    text(dataNames[i],x2,y2);
+    text(dataNames[i],rowLabel2x,rowLabel2y);
     fill(0);
-    x2 += 180;
+    rowLabel2x += 260;
   }
   
   //poke the hole in the donut chart
@@ -205,13 +220,13 @@ void draw() {
     if(dodIndex2 < 0) { //use format for first vis
       dodValue = table.getString(currState, dataNames[dodIndex]);
       fill(0,0,0);
-      textSize(16);
+      textSize(18);
       text(dataNames[dodIndex] + ": " + dodValue, mouseX, mouseY);
     }
     else {
       String state = states.get((int)topStatesIndex[dodIndex*3 + dodIndex2]);
       fill(0,0,0);
-      textSize(16);
+      textSize(18);
       text(state + ": " + topStatesData[dodIndex*3 + dodIndex2], mouseX, mouseY);
     }
   }
@@ -241,32 +256,45 @@ void donutChart(int diam, float[] angles) {
 
 //creation of vis2, called once in draw
 void createVis2() {
-  //TODO: sorted data will return float[] we can call for each square, conditionals based on filters will be in findMaxes()
-  float[] f = new float[] {15503746,7001136,6058873};
-  //float[] f = new float[] {662513,331556,291801};
+  float[] stData = steralize(topStatesData);
   
+  float[] dAlone = {stData[0],stData[1],stData[2]};
+  float[] carPool = {stData[3],stData[4],stData[5]};
+  float[] usedPublic = {stData[6],stData[7],stData[8]};
+  float[] walked = {stData[9],stData[10],stData[11]};
+  float[] other = {stData[12],stData[13],stData[14]};
+  float[] home = {stData[15],stData[16],stData[17]};
+
   //first row of squares
-<<<<<<< HEAD
-  topThree(400,10,f,vis2Colors[0]);
-  topThree(600,10,f,vis2Colors[1]);
-  topThree(800,10,f,vis2Colors[2]);
+  topThree(500,25,dAlone,vis2Colors[0]);
+  topThree(760,25,carPool,vis2Colors[1]);
+  topThree(1020,25,usedPublic,vis2Colors[2]);
   //second row of squares
-  topThree(400,220,f,vis2Colors[3]);
-  topThree(600,220,f,vis2Colors[4]);
-  topThree(800,220,f,vis2Colors[5]);
-
-=======
-  topThree(400,25,dAlone,vis2Colors[0]);
-  topThree(600,25,carPool,vis2Colors[1]);
-  topThree(800,25,usedPublic,vis2Colors[2]);
-  //second row of squares
-  topThree(400,240,walked,vis2Colors[3]);
-  topThree(600,240,other,vis2Colors[4]);
-  topThree(800,240,home,vis2Colors[5]);
-  
+  topThree(500,350,walked,vis2Colors[3]);
+  topThree(760,350,other,vis2Colors[4]);
+  topThree(1020,350,home,vis2Colors[5]);
 }
->>>>>>> cda49ceeabd8b78578dddc4fdb047d0b4141b324
 
+float[] steralize(float[] arr){
+  float[] clone = new float[18];
+  float min = arr[0];
+  for (int i = 1; i < arr.length; i++) {
+      if (arr[i] < min) {
+          min = arr[i];
+      }
+  }
+  
+  float max = arr[0];
+  for ( int i = 1; i < arr.length; i++) {
+    if ( arr[i] > max) {
+      max = arr[i];
+    }
+  }
+  
+  for (int i = 0; i < 18; i++){
+    clone[i] = (((arr[i]-min)*1.3)/(max-min))+0.2;
+  }
+  return clone;
 }
 
 /*
@@ -276,6 +304,8 @@ void createVis2() {
 void topThree(int x, int y, float[] maxes, color[] c) {
   for (int i = 0; i<3; i++){
     Rectangle r = new Rectangle(x,y,maxes[i],c[i]);
+    //x -= 70;
+    y += 100;
     rectShapes.add(r);  
   }
 }
@@ -295,13 +325,17 @@ void findMaxes(){
       
       max = 0;
       maxIndex = 0;
+      //DATA RETRIEVAL
       for(int j=1; j<columnData[i].length; j++) {
+        //TOGGLE RAW DATA
         if(toggleValue == 0) {
           data = columnData[i][j];
         }
+        //TOGGLE PERCENTAGE
         if(toggleValue == 1) {
           data = (columnData[i][j] / totalWorkers[j]) * 100;
         }
+
         if((data > max) && (data != oldMax1) && (data != oldMax2) && (totalWorkers[j] > rangeLow) && (totalWorkers[j] < rangeHigh)) {
           max = data;
           maxIndex = j;
@@ -347,48 +381,62 @@ void mouseMoved() {
 //SHAPE CLASSES
 class Arc {
   float diam, lastAngle, newAngle;
-  int color_index;
-  boolean highlight;
-  Arc(float diam, float lastAngle, float newAngle, int color_index) {
+  int colorIndex, col, strokeColor; 
+  Arc(float diam, float lastAngle, float newAngle, int colorIndex) {
   //fill in constructor - make sure to add any necessary parameters
     this.diam = diam;
     this.lastAngle = lastAngle;
     this.newAngle = newAngle;
-    this.color_index = color_index;
-    highlight = false;
+    this.colorIndex = colorIndex;
+    col = colors[colorIndex];
+    strokeColor = #FFFFFF;
   }
- 
+  
+  void highlight() {
+    strokeColor = #000000;
+    draw();
+  }
+  
   //draw the arc
   void draw(){
-    if(highlight == true) {
-      
-      arc(circleX, circleY, diam, diam, lastAngle, newAngle);
-    }
-    else { 
-      fill(colors[color_index]); 
-      arc(circleX, circleY, diam, diam, lastAngle, newAngle);
-    }
+    stroke(strokeColor);
+    fill(col); 
+    arc(circleX, circleY, diam, diam, lastAngle, newAngle);
   }
 }
 
 //rectangle object for vis #2
 class Rectangle{
   float pop;
-  int x,y,w,h;
+  int x,y,w,h, strokeColor;
   color c;
   //utilize pop paramater to create a proportional square (should be a normalized population value)
-  //hardcoded normalization based off largest value in csv
   Rectangle(int x, int y, float pop, color c) {
     this.x = x;
     this.y = y;
     this.c = c;
     this.pop = pop;
+    strokeColor = #FFFFFF;
+  }
+  
+  void highlight() {
+    strokeColor = #000000;
+    draw();
   }
   
   void draw(){
+    if(strokeColor == #000000) {
+      stroke(strokeColor);
+      fill(c);
+      rect(x,y,pop*65,pop*65,8,8,8,8);
+    }
+    else {
+      noStroke();
+      fill(c);
+      rect(x,y,pop*65,pop*65,8,8,8,8);
+    }
+
     fill(c);
-    rect(x,y,(pop/90000),(pop/90000),12,12,12,12);
+    rect(x,y,pop*65,pop*65,8,8,8,8);
   }
 }
-
-
