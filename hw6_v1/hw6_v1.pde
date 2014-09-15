@@ -420,20 +420,18 @@ class Rectangle{
   }
   
   void draw(){
-<<<<<<< HEAD
     if(strokeColor == #000000) {
       stroke(strokeColor);
       fill(c);
-      rect(x,y,pop*195,pop*195,8,8,8,8);
+      rect(x,y,pop*65,pop*65,8,8,8,8);
     }
     else {
       noStroke();
       fill(c);
-      rect(x,y,pop*195,pop*195,8,8,8,8);
+      rect(x,y,pop*65,pop*65,8,8,8,8);
     }
-=======
+
     fill(c);
-    rect(x,y,pop*65,pop*65,10,10,10,10);
->>>>>>> 4a9c5919f7a6206ae9052f005c4e04e86ff1bb90
+    rect(x,y,pop*65,pop*65,8,8,8,8);
   }
 }
