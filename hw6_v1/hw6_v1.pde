@@ -145,6 +145,13 @@ void draw() {
   text("Percentage", perx, pery);
   toggleValue = (int)dataToggle.getValue();
   
+  if(toggleValue == 1) {
+    filter.setRange(0, 100);
+  }
+  else {
+    filter.setRange(240000, 16000000);
+  }
+  
   //get values from filter
   rangeLow = (int)filter.getLowValue();
   rangeHigh = (int)filter.getHighValue();
@@ -318,14 +325,17 @@ void findMaxes(){
       for(int j=1; j<columnData[i].length; j++) {
         if(toggleValue == 0) {
           data = columnData[i][j];
+          if((data > max) && (data != oldMax1) && (data != oldMax2) && (totalWorkers[j] > rangeLow) && (totalWorkers[j] < rangeHigh)) {
+            max = data;
+            maxIndex = j;
+          }
         }
         if(toggleValue == 1) {
           data = (columnData[i][j] / totalWorkers[j]) * 100;
-        }
-
-        if((data > max) && (data != oldMax1) && (data != oldMax2) && (totalWorkers[j] > rangeLow) && (totalWorkers[j] < rangeHigh)) {
-          max = data;
-          maxIndex = j;
+          if((data > max) && (data != oldMax1) && (data != oldMax2) && (data > rangeLow) && (data < rangeHigh)) {
+            max = data;
+            maxIndex = j;
+          }
         }
       }
       topStatesData[index] = max;
@@ -414,21 +424,14 @@ class Rectangle{
   void draw(){
     if(strokeColor == #000000) {
       stroke(strokeColor);
+      strokeWeight(3);
       fill(c);
       rect(x,y,pop*65,pop*65,8,8,8,8);
     }
     else {
       noStroke();
       fill(c);
-<<<<<<< HEAD
-      rect(x,y,pop*65,pop*65,10,10,10,10);
-    }
-=======
       rect(x,y,pop*65,pop*65,8,8,8,8);
     }
-
-    fill(c);
-    rect(x,y,pop*65,pop*65,8,8,8,8);
->>>>>>> e5b7ae6d9c77d6800d2be302f467208026e95e9e
   }
 }
