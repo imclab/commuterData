@@ -45,17 +45,6 @@ color dodColor = #FFFFFF;
 float[] topStatesData = new float[18];
 float[] topStatesIndex = new float[18];
 
-<<<<<<< HEAD
-=======
-//color arrays of each nested square
-//cAlone, cPool, cPublic, cWalk, cOther, cHome
-color[][] vis2Colors = new color[][] {{#152140,#5DD5FF,#5484FF}, {#18401D,#97FFB7,#0fe85c}, 
-{#8F8200,#FFFAA5,#ffe800}, {#AB5E40,#E8A695,#e8804d}, {#590670,#EA9EFF,#cb0dff}, {#611219,#FFA5AF,#FF3042}};
-String[][] vis2States = new String[][] {{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, 
-{"Georgia", "Pennsylvania", "California"},{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}};
-float[][] columnData;
-
->>>>>>> cda49ceeabd8b78578dddc4fdb047d0b4141b324
 void setup(){
   size(1000, 500);
   cp5 = new ControlP5(this);
@@ -241,21 +230,10 @@ void donutChart(int diam, float[] angles) {
 
 //creation of vis2, called once in draw
 void createVis2() {
-  //TODO: sorted data will return float[] we can call for each square, conditionals based on filters will be in findMaxes()
   float[] f = new float[] {15503746,7001136,6058873};
   //float[] f = new float[] {662513,331556,291801};
   
   //first row of squares
-<<<<<<< HEAD
-  topThree(400,10,f,vis2Colors[0]);
-  topThree(600,10,f,vis2Colors[1]);
-  topThree(800,10,f,vis2Colors[2]);
-  //second row of squares
-  topThree(400,220,f,vis2Colors[3]);
-  topThree(600,220,f,vis2Colors[4]);
-  topThree(800,220,f,vis2Colors[5]);
-
-=======
   topThree(400,25,dAlone,vis2Colors[0]);
   topThree(600,25,carPool,vis2Colors[1]);
   topThree(800,25,usedPublic,vis2Colors[2]);
@@ -265,9 +243,7 @@ void createVis2() {
   topThree(800,240,home,vis2Colors[5]);
   
 }
->>>>>>> cda49ceeabd8b78578dddc4fdb047d0b4141b324
 
-}
 
 /*
 * Create three nested squares based on input of 3 floats
@@ -302,11 +278,8 @@ void findMaxes(){
         if(toggleValue == 1) {
           data = (columnData[i][j] / totalWorkers[j]) * 100;
         }
-<<<<<<< HEAD
-        if((data > max) && (data != oldMax1) && (data != oldMax2) && (data > rangeLow) && (data < rangeHigh)) {
-=======
+
         if((data > max) && (data != oldMax1) && (data != oldMax2) && (totalWorkers[j] > rangeLow) && (totalWorkers[j] < rangeHigh)) {
->>>>>>> origin/link-vis2-Justin
           max = data;
           maxIndex = j;
         }
