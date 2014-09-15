@@ -39,8 +39,8 @@ float[] topStatesIndex = new float[18];
 
 //color arrays of each nested square
 //cAlone, cPool, cPublic, cWalk, cOther, cHome
-color[][] vis2Colors = new color[][] {{#5484FF,#5DD5FF,#152140}, {#0fe85c,#97FFB7,#18401D}, 
-{#ffe800,#FFFAA5,#8F8200}, {#e8804d,#E8A695,#AB5E40}, {#cb0dff,#EA9EFF,#590670}, {#FF3042,#FFA5AF,#611219}};
+color[][] vis2Colors = new color[][] {{#152140,#5DD5FF,#5484FF}, {#18401D,#97FFB7,#0fe85c}, 
+{#8F8200,#FFFAA5,#ffe800}, {#AB5E40,#E8A695,#e8804d}, {#590670,#EA9EFF,#cb0dff}, {#611219,#FFA5AF,#FF3042}};
 String[][] vis2States = new String[][] {{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, 
 {"Georgia", "Pennsylvania", "California"},{"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}, {"Georgia", "Pennsylvania", "California"}};
 float[][] columnData;
@@ -162,9 +162,9 @@ void draw() {
   //draw labels for vis2
   //coordinates of first letter of each row
   int x = 445;
-  int y = 215;
+  int y = 20;
   int x2 = 465;
-  int y2 = 410;
+  int y2 = 235;
   for (int i = 0; i < 3; i++){
     fill(0);
     text(dataNames[i],x,y);
@@ -245,13 +245,13 @@ void createVis2() {
   home = normalize(home);
   
   //first row of squares
-  topThree(400,10,dAlone,vis2Colors[0]);
-  topThree(600,10,carPool,vis2Colors[1]);
-  topThree(800,10,usedPublic,vis2Colors[2]);
+  topThree(400,25,dAlone,vis2Colors[0]);
+  topThree(600,25,carPool,vis2Colors[1]);
+  topThree(800,25,usedPublic,vis2Colors[2]);
   //second row of squares
-  topThree(400,220,walked,vis2Colors[3]);
-  topThree(600,220,other,vis2Colors[4]);
-  topThree(800,220,home,vis2Colors[5]);
+  topThree(400,240,walked,vis2Colors[3]);
+  topThree(600,240,other,vis2Colors[4]);
+  topThree(800,240,home,vis2Colors[5]);
   
 }
 
