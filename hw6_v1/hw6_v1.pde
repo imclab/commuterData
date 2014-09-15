@@ -1,4 +1,5 @@
 import controlP5.*;
+import java.lang.Math;
 ControlP5 cp5;
 
 //dropDown variables
@@ -22,14 +23,24 @@ String[] dataNames = {"Drove Alone", "Car-pooled", "Used Public Transportation",
 
 //color arrays of each nested square
 //cAlone, cPool, cPublic, cWalk, cOther, cHome
-color[][] vis2Colors = new color[][] {{#152140,#5DD5FF,#5484FF}, {#18401D,#97FFB7,#0fe85c}, 
-{#8F8200,#FFFAA5,#ffe800}, {#AB5E40,#E8A695,#e8804d}, {#590670,#EA9EFF,#cb0dff}, {#611219,#FFA5AF,#FF3042}};
+color[][] vis2Colors = new color[][] {{#152000,#5484FF,#5DD5FF}, {#18401D,#0fe85c,#97FFB7}, 
+{#8F8200,#ffe800,#FFFAA5}, {#AB5E40,#e8804d,#E8A695}, {#590670,#cb0dff,#EA9EFF}, {#611219,#FF3042,#FFA5AF}};
 float[][] columnData;
 float[] totalWorkers;
 
-//coordinate center of donut chart
+//coordinates of objects
 float circleX = 200;
-float circleY = 250;
+float circleY = 350;
+int slidex = 560;
+int slidey = 600;
+int dropx = 150;
+int dropy = 360;
+int togglex = 745;
+int toggley = 635;
+int rawx = 650;
+int rawy = 650;
+int perx = 815;
+int pery = 650;
 
 //vis1, vis2 variables
 ArrayList<Arc> arcShapes;
@@ -41,12 +52,11 @@ int dodIndex = 0;
 int dodIndex2 = 0;
 color dodColor = #FFFFFF;
 
-
 float[] topStatesData = new float[18];
 float[] topStatesIndex = new float[18];
 
 void setup(){
-  size(1000, 500);
+  size(1250, 700);
   cp5 = new ControlP5(this);
   
   createTable();
@@ -60,7 +70,7 @@ void setup(){
 
 void createFilter() {
   //slider-filtering
-  filter = cp5.addRange("filter").setPosition(485, 430).setSize(400,20).setRange(240000, 16000000).setValue(16000000);
+  filter = cp5.addRange("filter").setPosition(slidex, slidey).setSize(420,30).setRange(240000, 16000000).setValue(16000000);
   filter.setColorBackground(color(0,0,0));
   filter.setColorActive(color(200, 200, 0));
 }
@@ -89,7 +99,7 @@ void createTable() {
 void createDropDown() {
   
   //positioning of state dropdown
-  dropDown = cp5.addDropdownList("states").setPosition(150, 260);
+  dropDown = cp5.addDropdownList("states").setPosition(dropx, dropy);
   dropDown.setItemHeight(20);
   dropDown.setBarHeight(15);
   dropDown.captionLabel().set("States");
@@ -110,7 +120,7 @@ void createDropDown() {
 }
 
 void createToggle() {
-  dataToggle = cp5.addToggle("data Toggle").setPosition(660, 470).setSize(50,20).setMode(ControlP5.SWITCH);
+  dataToggle = cp5.addToggle("data Toggle").setPosition(togglex, toggley).setSize(50,20).setMode(ControlP5.SWITCH);
 }
 
 void controlEvent(ControlEvent theEvent) {
@@ -134,11 +144,14 @@ void draw() {
   println(arcShapes.size());
     
   //get toggle values, set labels
-  textSize(14);
+  textSize(15.5);
   fill(0);
-  text("Raw Value", 570, 485);
+  text("Commuter Data By State", 80, 80);
   fill(0);
-  text("Percentage", 730, 485);
+  text("By: Justin Luk * Rebecca Norton", 80, 100);
+  text("Raw Value", rawx, rawy);
+  fill(0);
+  text("Percentage", perx, pery);
   toggleValue = (int)dataToggle.getValue();
   
   //get values from filter
@@ -179,19 +192,19 @@ void draw() {
   
   //draw labels for vis2
   //coordinates of first letter of each row
-  int x = 445;
-  int y = 20;
-  int x2 = 465;
-  int y2 = 235;
+  int rowLabel1x = 485;
+  int rowLabel1y = 20;
+  int rowLabel2x = 490;
+  int rowLabel2y = 335;
   for (int i = 0; i < 3; i++){
     fill(0);
-    text(dataNames[i],x,y);
-    x += 180;
+    text(dataNames[i],rowLabel1x,rowLabel1y);
+    rowLabel1x += 260;
   }
   for (int i = 3; i < 6; i++){
-    text(dataNames[i],x2,y2);
+    text(dataNames[i],rowLabel2x,rowLabel2y);
     fill(0);
-    x2 += 180;
+    rowLabel2x += 260;
   }
   
   //poke the hole in the donut chart
@@ -205,13 +218,13 @@ void draw() {
     if(dodIndex2 < 0) { //use format for first vis
       dodValue = table.getString(currState, dataNames[dodIndex]);
       fill(0,0,0);
-      textSize(16);
+      textSize(18);
       text(dataNames[dodIndex] + ": " + dodValue, mouseX, mouseY);
     }
     else {
       String state = states.get((int)topStatesIndex[dodIndex*3 + dodIndex2]);
       fill(0,0,0);
-      textSize(16);
+      textSize(18);
       text(state + ": " + topStatesData[dodIndex*3 + dodIndex2], mouseX, mouseY);
     }
   }
@@ -241,42 +254,45 @@ void donutChart(int diam, float[] angles) {
 
 //creation of vis2, called once in draw
 void createVis2() {
-  
-  float[] dAlone = {topStatesData[0],topStatesData[1],topStatesData[2]};
-  dAlone = normalize(dAlone);
-  float[] carPool = {topStatesData[3],topStatesData[4],topStatesData[5]};
-  carPool = normalize(carPool);
-  float[] usedPublic = {topStatesData[6],topStatesData[7],topStatesData[8]};
-  usedPublic = normalize(usedPublic);
-  float[] walked = {topStatesData[9],topStatesData[10],topStatesData[11]};
-  walked = normalize(walked);
-  float[] other = {topStatesData[12],topStatesData[13],topStatesData[14]};
-  other = normalize(other);
-  float[] home = {topStatesData[15],topStatesData[16],topStatesData[17]};
-
-  home = normalize(home);
+  float[] stData = steralize(topStatesData);
+  float[] dAlone = {stData[0],stData[1],stData[2]};
+  float[] carPool = {stData[3],stData[4],stData[5]};
+  float[] usedPublic = {stData[6],stData[7],stData[8]};
+  float[] walked = {stData[9],stData[10],stData[11]};
+  float[] other = {stData[12],stData[13],stData[14]};
+  float[] home = {stData[15],stData[16],stData[17]};
 
   //first row of squares
-  topThree(400,25,dAlone,vis2Colors[0]);
-  topThree(600,25,carPool,vis2Colors[1]);
-  topThree(800,25,usedPublic,vis2Colors[2]);
+  topThree(500,25,dAlone,vis2Colors[0]);
+  topThree(760,25,carPool,vis2Colors[1]);
+  topThree(1020,25,usedPublic,vis2Colors[2]);
   //second row of squares
-  topThree(400,240,walked,vis2Colors[3]);
-  topThree(600,240,other,vis2Colors[4]);
-  topThree(800,240,home,vis2Colors[5]);
+  topThree(500,350,walked,vis2Colors[3]);
+  topThree(760,350,other,vis2Colors[4]);
+  topThree(1020,350,home,vis2Colors[5]);
 }
 
-float[] normalize(float[] arr){
-    int sum = 0;
-    for (float d:arr){
-      sum += d;
+float[] steralize(float[] arr){
+  float[] clone = arr;
+  float min = clone[0];
+  for (int i = 1; i < clone.length; i++) {
+      if (clone[i] < min) {
+          min = clone[i];
+      }
+  }
+  
+  float max = clone[0];
+  for ( int i = 1; i < clone.length; i++) {
+    if ( clone[i] > max) {
+      max = clone[i];
     }
-    for (int i = 0; i < 3; i++){
-      arr[i] = arr[i]/sum;
-    }
-    return arr;
+  }
+  
+  for (int i = 0; i < 18; i++){
+    clone[i] = (((clone[i]-min)*1.3)/(max-min))+0.2;
+  }
+  return clone;
 }
-
 
 /*
 * Create three nested squares based on input of 3 floats
@@ -285,6 +301,8 @@ float[] normalize(float[] arr){
 void topThree(int x, int y, float[] maxes, color[] c) {
   for (int i = 0; i<3; i++){
     Rectangle r = new Rectangle(x,y,maxes[i],c[i]);
+    //x -= 70;
+    y += 100;
     rectShapes.add(r);  
   }
 }
@@ -402,6 +420,7 @@ class Rectangle{
   }
   
   void draw(){
+<<<<<<< HEAD
     if(strokeColor == #000000) {
       stroke(strokeColor);
       fill(c);
@@ -412,5 +431,9 @@ class Rectangle{
       fill(c);
       rect(x,y,pop*195,pop*195,8,8,8,8);
     }
+=======
+    fill(c);
+    rect(x,y,pop*65,pop*65,10,10,10,10);
+>>>>>>> 4a9c5919f7a6206ae9052f005c4e04e86ff1bb90
   }
 }
