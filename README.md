@@ -5,8 +5,8 @@ commuterData
 
 TODO
 * Percentage vs. Absolute Value of population needed
-* DoD still needed
 * Linking/Brushing between VIS1 + VIS2
+* Linking/Brushing within itself
 
 Visualization #1:	Show	the	breakdown	of	commuters	by	state.	You	should	allow	the	
 user	to	select	which	state	is	shown	(this	should	most	likely	be	a	dropdown	list,	but	if	you	
