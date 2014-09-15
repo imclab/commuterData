@@ -31,11 +31,11 @@ float[] totalWorkers;
 //coordinates of objects
 float circleX = 200;
 float circleY = 350;
-int slidex = 550;
+int slidex = 650;
 int slidey = 600;
 int dropx = 150;
 int dropy = 360;
-int togglex = 735;
+int togglex = 835;
 int toggley = 635;
 
 //vis1, vis2 variables
@@ -135,9 +135,9 @@ void draw() {
   //get toggle values, set labels
   textSize(14);
   fill(0);
-  text("Raw Value", 650, 650);
+  text("Raw Value", 750, 650);
   fill(0);
-  text("Percentage", 800, 650);
+  text("Percentage", 900, 650);
   toggleValue = (int)dataToggle.getValue();
   
   //get values from filter
@@ -247,12 +247,12 @@ void createVis2() {
   float[] home = {stData[15],stData[16],stData[17]};
 
   //first row of squares
-  topThree(520,25,dAlone,vis2Colors[0]);
-  topThree(840,25,carPool,vis2Colors[1]);
+  topThree(550,25,dAlone,vis2Colors[0]);
+  topThree(850,25,carPool,vis2Colors[1]);
   topThree(1150,25,usedPublic,vis2Colors[2]);
   //second row of squares
-  topThree(520,350,walked,vis2Colors[3]);
-  topThree(840,350,other,vis2Colors[4]);
+  topThree(550,350,walked,vis2Colors[3]);
+  topThree(850,350,other,vis2Colors[4]);
   topThree(1150,350,home,vis2Colors[5]);
 }
 
@@ -273,7 +273,7 @@ float[] steralize(float[] arr){
   }
   
   for (int i = 0; i < 18; i++){
-    clone[i] = (((clone[i]-min)*3)/(max-min))+0.5;
+    clone[i] = (((clone[i]-min)*1.3)/(max-min))+0.2;
   }
   return clone;
 }
@@ -285,8 +285,8 @@ float[] steralize(float[] arr){
 void topThree(int x, int y, float[] maxes, color[] c) {
   for (int i = 0; i<3; i++){
     Rectangle r = new Rectangle(x,y,maxes[i],c[i]);
-    x -= 70;
-    y += 90;
+    //x -= 70;
+    y += 100;
     rectShapes.add(r);  
   }
 }
@@ -399,7 +399,7 @@ class Rectangle{
   
   void draw(){
     fill(c);
-    rect(x,y,pop*60,pop*60,8,8,8,8);
+    rect(x,y,pop*70,pop*70,8,8,8,8);
   }
 }
 
