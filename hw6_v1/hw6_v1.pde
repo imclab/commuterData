@@ -71,8 +71,9 @@ void setup(){
 void createFilter() {
   //slider-filtering
   filter = cp5.addRange("filter").setPosition(slidex, slidey).setSize(420,30).setRange(240000, 16000000).setValue(16000000);
-  filter.setColorBackground(color(0,0,0));
+  filter.setColorBackground(color(200,200,200));
   filter.setColorActive(color(200, 200, 0));
+  filter.setColorValueLabel(color(0,0,0));
 }
 
 void createTable() {
@@ -134,15 +135,7 @@ void controlEvent(ControlEvent theEvent) {
 
 void draw() {
   background(255);
-  for(int i = 0; i<rectShapes.size(); i++) {
-    rectShapes.remove(i);
-  }
   
-  for(int i = 0; i<arcShapes.size(); i++) {
-    arcShapes.remove(i);
-  }
-  println(arcShapes.size());
-    
   //get toggle values, set labels
   textSize(15.5);
   fill(0);
@@ -169,25 +162,23 @@ void draw() {
     r.draw();
   }
   
-  for(Arc a : arcShapes) {
-    a.draw();
-  }
-  println();
-  
-    //linking
+  //linking
   if(detailOnDemand == true && dodIndex2 >= 0) {
     String vis2State = states.get((int)topStatesIndex[dodIndex*3 + dodIndex2]);
     if(states.get(currState).equals(vis2State)) {
-      arcShapes.get(dodIndex).highlight();
+      arcShapes.get(dodIndex).highlight = true;
     }
   }
-  else if(detailOnDemand == true && dodIndex2 < 0) {  
-    for(int i = 0; i<3; i++) {
-      String vis2State = states.get((int)topStatesIndex[dodIndex*3 + i]);
-      if(states.get(currState).equals(vis2State)) {
-        rectShapes.get(dodIndex*3 + i).highlight();
-      }
-    }
+  else if(detailOnDemand == true && dodIndex2 < 0) {
+    //dodColor;
+    //topStatesIndex[index*3]
+    //if() {
+    //  rectShapes.get(topStatesIndex).highlight = true; }
+  }
+  
+  
+  for(Arc a : arcShapes) {
+    a.draw();
   }
   
   //draw labels for vis2
@@ -375,34 +366,34 @@ void mouseMoved() {
 //SHAPE CLASSES
 class Arc {
   float diam, lastAngle, newAngle;
-  int colorIndex, col, strokeColor; 
-  Arc(float diam, float lastAngle, float newAngle, int colorIndex) {
+  int color_index;
+  boolean highlight;
+  Arc(float diam, float lastAngle, float newAngle, int color_index) {
   //fill in constructor - make sure to add any necessary parameters
     this.diam = diam;
     this.lastAngle = lastAngle;
     this.newAngle = newAngle;
-    this.colorIndex = colorIndex;
-    col = colors[colorIndex];
-    strokeColor = #FFFFFF;
-  }
-  
-  void highlight() {
-    strokeColor = #000000;
-    draw();
+    this.color_index = color_index;
+    highlight = false;
   }
   
   //draw the arc
   void draw(){
-    stroke(strokeColor);
-    fill(col); 
-    arc(circleX, circleY, diam, diam, lastAngle, newAngle);
+    if(highlight == true) {
+      fill(255, 255, 255);
+      arc(circleX, circleY, diam, diam, lastAngle, newAngle);
+    }
+    else { 
+      fill(colors[color_index]); 
+      arc(circleX, circleY, diam, diam, lastAngle, newAngle);
+    }
   }
 }
 
 //rectangle object for vis #2
 class Rectangle{
   float pop;
-  int x,y,w,h, strokeColor;
+  int x,y,w,h;
   color c;
   //utilize pop paramater to create a proportional square (should be a normalized population value)
   //hardcoded normalization based off largest value in csv
@@ -411,29 +402,12 @@ class Rectangle{
     this.y = y;
     this.c = c;
     this.pop = pop;
-    strokeColor = #FFFFFF;
-  }
-  
-  void highlight() {
-    strokeColor = #000000;
-    draw();
   }
   
   void draw(){
-<<<<<<< HEAD
-    if(strokeColor == #000000) {
-      stroke(strokeColor);
-      fill(c);
-      rect(x,y,pop*195,pop*195,8,8,8,8);
-    }
-    else {
-      noStroke();
-      fill(c);
-      rect(x,y,pop*195,pop*195,8,8,8,8);
-    }
-=======
     fill(c);
     rect(x,y,pop*65,pop*65,10,10,10,10);
->>>>>>> 4a9c5919f7a6206ae9052f005c4e04e86ff1bb90
   }
 }
+
+
