@@ -31,12 +31,16 @@ float[] totalWorkers;
 //coordinates of objects
 float circleX = 200;
 float circleY = 350;
-int slidex = 650;
+int slidex = 560;
 int slidey = 600;
 int dropx = 150;
 int dropy = 360;
-int togglex = 835;
+int togglex = 745;
 int toggley = 635;
+int rawx = 650;
+int rawy = 650;
+int perx = 815;
+int pery = 650;
 
 //vis1, vis2 variables
 ArrayList<Arc> arcShapes;
@@ -52,7 +56,7 @@ float[] topStatesData = new float[18];
 float[] topStatesIndex = new float[18];
 
 void setup(){
-  size(1400, 700);
+  size(1250, 700);
   cp5 = new ControlP5(this);
   
   createTable();
@@ -133,11 +137,14 @@ void draw() {
  
     
   //get toggle values, set labels
-  textSize(14);
+  textSize(15.5);
   fill(0);
-  text("Raw Value", 750, 650);
+  text("Commuter Data By State", 80, 80);
   fill(0);
-  text("Percentage", 900, 650);
+  text("By: Justin Luk * Rebecca Norton", 80, 100);
+  text("Raw Value", rawx, rawy);
+  fill(0);
+  text("Percentage", perx, pery);
   toggleValue = (int)dataToggle.getValue();
   
   //get values from filter
@@ -176,9 +183,9 @@ void draw() {
   
   //draw labels for vis2
   //coordinates of first letter of each row
-  int rowLabel1x = 575;
+  int rowLabel1x = 485;
   int rowLabel1y = 20;
-  int rowLabel2x = 590;
+  int rowLabel2x = 490;
   int rowLabel2y = 335;
   for (int i = 0; i < 3; i++){
     fill(0);
@@ -247,13 +254,13 @@ void createVis2() {
   float[] home = {stData[15],stData[16],stData[17]};
 
   //first row of squares
-  topThree(550,25,dAlone,vis2Colors[0]);
-  topThree(850,25,carPool,vis2Colors[1]);
-  topThree(1150,25,usedPublic,vis2Colors[2]);
+  topThree(500,25,dAlone,vis2Colors[0]);
+  topThree(760,25,carPool,vis2Colors[1]);
+  topThree(1020,25,usedPublic,vis2Colors[2]);
   //second row of squares
-  topThree(550,350,walked,vis2Colors[3]);
-  topThree(850,350,other,vis2Colors[4]);
-  topThree(1150,350,home,vis2Colors[5]);
+  topThree(500,350,walked,vis2Colors[3]);
+  topThree(760,350,other,vis2Colors[4]);
+  topThree(1020,350,home,vis2Colors[5]);
 }
 
 float[] steralize(float[] arr){
@@ -399,7 +406,7 @@ class Rectangle{
   
   void draw(){
     fill(c);
-    rect(x,y,pop*70,pop*70,8,8,8,8);
+    rect(x,y,pop*65,pop*65,10,10,10,10);
   }
 }
 
