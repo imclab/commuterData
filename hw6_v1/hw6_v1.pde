@@ -22,8 +22,8 @@ String[] dataNames = {"Drove Alone", "Car-pooled", "Used Public Transportation",
 
 //color arrays of each nested square
 //cAlone, cPool, cPublic, cWalk, cOther, cHome
-color[][] vis2Colors = new color[][] {{#5484FF,#5DD5FF,#152140}, {#0fe85c,#97FFB7,#18401D}, 
-{#ffe800,#FFFAA5,#8F8200}, {#e8804d,#E8A695,#AB5E40}, {#cb0dff,#EA9EFF,#590670}, {#FF3042,#FFA5AF,#611219}};
+color[][] vis2Colors = new color[][] {{#152140,#5DD5FF,#5484FF}, {#18401D,#97FFB7,#0fe85c}, 
+{#8F8200,#FFFAA5,#ffe800}, {#AB5E40,#E8A695,#e8804d}, {#590670,#EA9EFF,#cb0dff}, {#611219,#FFA5AF,#FF3042}};
 float[][] columnData;
 float[] totalWorkers;
 
@@ -60,7 +60,7 @@ void setup(){
 
 void createFilter() {
   //slider-filtering
-  filter = cp5.addRange("filter").setPosition(485, 430).setSize(400,20).setRange(240000, 16000000);
+  filter = cp5.addRange("filter").setPosition(485, 430).setSize(400,20).setRange(240000, 16000000).setValue(16000000);
   filter.setColorBackground(color(0,0,0));
   filter.setColorActive(color(200, 200, 0));
 }
@@ -139,15 +139,15 @@ void draw() {
   rangeHigh = (int)filter.getHighValue();
   
   findMaxes();
-  
-  for(Rectangle r : rectShapes) {
-    r.draw();
-  }
  
   
   //instantiate each visualization
   createVis1();
   createVis2();
+  
+  for(Rectangle r : rectShapes) {
+    r.draw();
+  }
   
   //linking
   if(detailOnDemand == true && dodIndex2 >= 0) {
@@ -165,11 +165,7 @@ void draw() {
   //draw labels for vis2
   //coordinates of first letter of each row
   int x = 445;
-<<<<<<< HEAD
-  int y = 200;
-=======
   int y = 20;
->>>>>>> cda49ceeabd8b78578dddc4fdb047d0b4141b324
   int x2 = 465;
   int y2 = 235;
   for (int i = 0; i < 3; i++){
@@ -230,9 +226,21 @@ void donutChart(int diam, float[] angles) {
 
 //creation of vis2, called once in draw
 void createVis2() {
-  float[] f = new float[] {15503746,7001136,6058873};
-  //float[] f = new float[] {662513,331556,291801};
   
+  float[] dAlone = {topStatesData[0],topStatesData[1],topStatesData[2]};
+  dAlone = normalize(dAlone);
+  float[] carPool = {topStatesData[3],topStatesData[4],topStatesData[5]};
+  carPool = normalize(carPool);
+  float[] usedPublic = {topStatesData[6],topStatesData[7],topStatesData[8]};
+  usedPublic = normalize(usedPublic);
+  float[] walked = {topStatesData[9],topStatesData[10],topStatesData[11]};
+  walked = normalize(walked);
+  float[] other = {topStatesData[12],topStatesData[13],topStatesData[14]};
+  other = normalize(other);
+  float[] home = {topStatesData[15],topStatesData[16],topStatesData[17]};
+
+  home = normalize(home);
+
   //first row of squares
   topThree(400,25,dAlone,vis2Colors[0]);
   topThree(600,25,carPool,vis2Colors[1]);
@@ -241,7 +249,19 @@ void createVis2() {
   topThree(400,240,walked,vis2Colors[3]);
   topThree(600,240,other,vis2Colors[4]);
   topThree(800,240,home,vis2Colors[5]);
-  
+}
+
+float[] normalize(float[] arr){
+    int sum = 0;
+    println(arr);
+    for (float d:arr){
+      sum += d;
+    }
+    for (int i = 0; i < 3; i++){
+      arr[i] = arr[i]/sum;
+    }
+    println(arr);
+    return arr;
 }
 
 
@@ -364,7 +384,7 @@ class Rectangle{
   
   void draw(){
     fill(c);
-    rect(x,y,(pop/90000),(pop/90000),12,12,12,12);
+    rect(x,y,pop*195,pop*195,8,8,8,8);
   }
 }
 
