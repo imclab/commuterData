@@ -69,7 +69,7 @@ void setup(){
 
 void createFilter() {
   //slider-filtering
-  filter = cp5.addRange("filter").setPosition(slidex, slidey).setSize(420,30).setRange(240000, 16000000).setValue(16000000);
+  filter = cp5.addRange("filter").setPosition(slidex, slidey).setSize(420,30);
   filter.setColorBackground(color(0,0,0));
   filter.setColorActive(color(200, 200, 0));
 }
@@ -120,6 +120,7 @@ void createDropDown() {
 
 void createToggle() {
   dataToggle = cp5.addToggle("data Toggle").setPosition(togglex, toggley).setSize(50,20).setMode(ControlP5.SWITCH);
+  dataToggle.setColorBackground(color(0,0,0));
 }
 
 void controlEvent(ControlEvent theEvent) {
@@ -147,9 +148,11 @@ void draw() {
   
   if(toggleValue == 1) {
     filter.setRange(0, 100);
+    filter.setValue(0);
   }
   else {
-    filter.setRange(240000, 16000000);
+    filter.setRange(0, 16000000);
+    filter.setValue(0);
   }
   
   //get values from filter
@@ -300,7 +303,6 @@ float[] steralize(float[] arr){
 void topThree(int x, int y, float[] maxes, color[] c) {
   for (int i = 0; i<3; i++){
     Rectangle r = new Rectangle(x,y,maxes[i],c[i]);
-    //x -= 70;
     y += 100;
     rectShapes[rectCount] = r;
     rectCount++;  
